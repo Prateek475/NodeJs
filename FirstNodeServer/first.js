@@ -1,4 +1,3 @@
-const http = require('http');
 const fs = require('fs');
 
 function requestListner(req,response) {
@@ -28,7 +27,22 @@ function requestListner(req,response) {
     response.write('<body>');
     response.write('<h1>Products...</h1>');
   } else if(req.url.toLowerCase() == '/submit-form' && req.method =='POST') {
-    fs.writeFileSync('user.txt','Prateek Dixit');
+    let body = [];
+    req.on('data',(chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    })
+    req.on('end',()=> {
+      const parse = Buffer.concat(body).toString();
+      console.log(parse);
+      const bodyObj = new URLSearchParams(parse);
+      let obj = {};
+      for (const [key,val] of bodyObj.entries()) {
+        obj[key] = val;
+      }
+      console.log(obj);
+      fs.writeFileSync('user.txt',JSON.stringify(obj));
+    })
     response.statusCode = 302;
     response.setHeader('Location','/');
   }
@@ -38,8 +52,4 @@ function requestListner(req,response) {
   response.end();
 }
 
-const server = http.createServer(requestListner);
-const port = 3000;
-server.listen(port,()=> {
-  console.log(`server running on address: https://localhost:${port}`);
-});
+module.exports = requestListner;
