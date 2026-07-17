@@ -1,6 +1,6 @@
 function requestListner(req,res) {
+  res.setHeader('Content-type','text/html');
   if(req.url.toLowerCase() == '/') {
-    res.setHeader('Content-type','text/html');
     res.write(`
       <!DOCTYPE html>
       <html lang="en">

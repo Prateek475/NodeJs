@@ -20,12 +20,14 @@ function requestListner(req,response) {
     
     response.write('<br><input type="submit" value="Submit"/>');
     response.write('</form>');
+    response.end();
   } else if(req.url.toLowerCase() == '/products') {
     response.setHeader('Content-type','text/html');
     response.write('<html>');
     response.write('<head><title>Complete Coding</title></head>');
     response.write('<body>');
     response.write('<h1>Products...</h1>');
+    response.end();
   } else if(req.url.toLowerCase() == '/submit-form' && req.method =='POST') {
     let body = [];
     req.on('data',(chunk) => {
@@ -41,15 +43,18 @@ function requestListner(req,response) {
         obj[key] = val;
       }
       console.log(obj);
-      fs.writeFileSync('user.txt',JSON.stringify(obj));
+      fs.writeFile('user.txt',JSON.stringify(obj),error => {
+        response.statusCode = 302;
+        response.setHeader('Location','/');
+        response.end();
+      });
     })
-    response.statusCode = 302;
-    response.setHeader('Location','/');
+  } else {
+    response.write('<h1>LIKE / SHARE / SUBSCRIBE</h1>');
+    response.write('</body>');
+    response.write('</html>');
+    response.end();
   }
-  response.write('<h1>LIKE / SHARE / SUBSCRIBE</h1>');
-  response.write('</body>');
-  response.write('</html>');
-  response.end();
 }
 
 module.exports = requestListner;
