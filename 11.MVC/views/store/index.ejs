@@ -1,11 +1,11 @@
-<%- include('partials/hd') %>
+<%- include('../partials/hd') %>
 <body class="bg-gray-100 min-h-screen pb-10">
-  <%- include('partials/header') %>
+  <%- include('../partials/header') %>
   
   <!-- Increased max-w to 4xl to allow cards to sit side-by-side on desktop -->
   <main class="container mx-auto bg-white shadow-lg rounded-xl p-8 mt-10 max-w-4xl">
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">
-      Here are our registered homes:
+      Welcome to our index page:
     </h2>
     
     <!-- Changed to a responsive grid layout -->
@@ -59,10 +59,12 @@
               </button>
             </div>
           </div>
-          
+          <button class="bg-green-300 p-2">Book</button>
         </li>
       <% }); %>
     </ul>
   </main>
 </body>
 </html>
+
+<!-- Dummy ui -->
