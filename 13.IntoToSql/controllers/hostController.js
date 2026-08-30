@@ -7,9 +7,12 @@ exports.getAddhome = (req,res,next) => {
 
 exports.postAddHome = (req,res,next) => {
   console.log(req.body);
-  const mod = new Home(req.body.housename,req.body.price,req.body.location,req.body.rating,req.body.photourl);
-  mod.save(false);
-  res.render('host/homeAdded',{title : "Successfull home added"});
+  const mod = new Home(req.body.housename,req.body.price,req.body.location,req.body.rating,req.body.photourl,req.body.description);
+  mod.save(false).then(()=> {
+    res.render('host/homeAdded',{title : "Successfull home added"});
+  }).catch((error)=> {
+    console.log("Error adding home...");
+  });
 }
 
 exports.getHostHomes = (req,res,next) => {
@@ -21,7 +24,8 @@ exports.getHostHomes = (req,res,next) => {
 exports.getEditHome = (req,res,next) => {
   const homeId = req.params.homeId;
   const editing = req.query.editing === "true";
-  Home.findById(homeId,home => {
+  Home.findById(homeId).then(([rows]) => {
+    const home = rows[0];
     if(!home) {
       console.log("Home not found!!!");
       return res.redirect('/host-home-list');
@@ -33,18 +37,24 @@ exports.getEditHome = (req,res,next) => {
 }
 
 exports.postEditHome = (req,res,next) => {
-  const mod = new Home(req.body.housename,req.body.price,req.body.location,req.body.rating,req.body.photourl);
+  const mod = new Home(req.body.housename,req.body.price,req.body.location,req.body.rating,req.body.photourl,req.body.description);
   mod.id = req.body.id;
-  mod.save(true);
-  res.redirect('/host-home-list');
+  mod.save(true).then(() => {
+    res.redirect('/host-home-list');
+  }).catch((error) => {
+    console.log("Error adding home: ",error);
+  });
 }
 
 exports.postDeleteHome = (req,res,next) => {
   const homeId = req.params.homeId;
-  Home.delHome(homeId);
-  Fav.delFavourites(homeId,() => {
+  Home.delHome(homeId).then(([rows]) => {
+    Fav.delFavourites(homeId,() => {
     res.redirect('/host-home-list');
-  });
+  })
+  }).catch((error) => {
+    console.log("Error while deleting: ",error);
+  });;
 }
 
 

@@ -29,7 +29,8 @@ exports.getFavouriteList = (req,res,next) => {
 
 exports.getHomeDetails = (req,res,next) => {
   const homeId = req.params.homeId;
-  Home.findById(homeId,(home) => {
+  Home.findById(homeId).then(([rows]) => {
+    const home = rows[0];
     if(!home) {
       console.log("Home not found");
       res.redirect('/');
