@@ -12,7 +12,7 @@
     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
       <% regHomes
         .filter(home => fav.some(f => 
-          f.homeId.toString() === home._id.toString()
+          f.id.toString() === home._id.toString()
         ))
         .forEach(home => { %>
         <li class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">

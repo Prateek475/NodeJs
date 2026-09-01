@@ -4,7 +4,6 @@ const {getDb} =  require('../utils/dbutil');
 module.exports = class Favourites {
 
   static addToFavourite(id) {
-    console.log(id);
     const db = getDb();
     return db.collection("favourites").findOne({homeId : new ObjectId(String(id))})
     .then(existingFav => {

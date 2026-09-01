@@ -1,30 +1,11 @@
-const { ObjectId } = require('mongodb');
+const mongoose = require("mongoose");
 
-module.exports = class Favourites {
+/**
+ * id is the only field here for this db
+ */
 
-  static addToFavourite(id) {
-    const db = getDb();
-    return db.collection("favourites").findOne({homeId : new ObjectId(String(id))})
-    .then(existingFav => {
-      if(existingFav) {
-        console.log("This house is already favourited!!!");
-        return;
-      }
-      return db.collection("favourites").insertOne({
-        homeId : new ObjectId(String(id))
-      });
-    });
-  }
-
-  static getFavourites() {
-    const db = getDb();
-    return db.collection("favourites")
-      .find().toArray();
-  } 
-
-  static delFavourites(homeId) {
-    const db = getDb();
-    return db.collection("favourites")
-      .deleteOne({homeId : new ObjectId(String(homeId))});
-  }
-}
+const favSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true }
+});
+ 
+module.exports = mongoose.model("favourite",favSchema);
