@@ -2,7 +2,7 @@ const Home = require("../models/home");
 const Fav = require("../models/favourites");
 
 exports.getAddhome = (req, res, next) => {
-  res.render("host/editHome", { title: "Add home to airbnb", editing: false }); //telling the view by giving title data from model to what to give to user classic work of controller view gives the resposnse back with dynamic ui and server sends the response..
+  res.render("host/editHome", { title: "Add home to airbnb", editing: false ,isLoggedIn: req.isLoggedIn}); //telling the view by giving title data from model to what to give to user classic work of controller view gives the resposnse back with dynamic ui and server sends the response..
 };
 
 exports.postAddHome = (req, res, next) => {
@@ -21,7 +21,7 @@ exports.postAddHome = (req, res, next) => {
     .save()
     .then(() => {
       console.log("Home saved successfully...");
-      res.render("host/homeAdded", { title: "Home successfully added" });
+      res.render("host/homeAdded", { title: "Home successfully added",isLoggedIn: req.isLoggedIn });
     })
     .catch((err) => {
       console.log("Error occurred: ", err);
@@ -33,6 +33,7 @@ exports.getHostHomes = (req, res, next) => {
     res.render("host/host-home-list", {
       regHomes: regHomes,
       title: "HostHome list",
+      isLoggedIn: req.isLoggedIn
     });
   });
 };
@@ -50,6 +51,7 @@ exports.getEditHome = (req, res, next) => {
         title: "Edit your home",
         editing: editing,
         home: home,
+        isLoggedIn: req.isLoggedIn
       });
     }
   });

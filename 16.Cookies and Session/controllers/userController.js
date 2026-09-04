@@ -3,7 +3,7 @@ const Fav = require("../models/favourites");
 
 exports.homePage = (req, res, next) => {
   Home.find().then((regHomes) => {
-    res.render("store/home-list", { regHomes: regHomes, title: "Homes List" });
+    res.render("store/home-list", { regHomes: regHomes, title: "Homes List",isLoggedIn: req.isLoggedIn });
   });
 };
 
@@ -12,13 +12,14 @@ exports.getIndex = (req, res, next) => {
     res.render("store/index", {
       regHomes: regHomes,
       title: "Air bnb home page",
+      isLoggedIn: req.isLoggedIn
     });
   });
 };
 
 exports.getBooking = (req, res, next) => {
   Home.find().then((regHomes) => {
-    res.render("store/booking.ejs", { title: "My bookings" });
+    res.render("store/booking.ejs", { title: "My bookings",isLoggedIn: req.isLoggedIn });
   });
 };
 
@@ -29,6 +30,7 @@ exports.getFavouriteList = (req, res, next) => {
         regHomes: regHomes,
         title: "My Favourites",
         fav: fav,
+        isLoggedIn: req.isLoggedIn
       });
     });
   });
@@ -41,8 +43,9 @@ exports.getHomeDetails = (req, res, next) => {
       console.log("Home not found");
       res.redirect("/");
     } else {
+      req.isLoggedIn = req.get("Cookie").split("=")[1];
       console.log("Home details found: ", home);
-      res.render("store/home-detail.ejs", { title: "Home", home: home });
+      res.render("store/home-detail.ejs", { title: "Home", home: home,isLoggedIn: req.isLoggedIn });
     }
   });
 };

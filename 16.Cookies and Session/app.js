@@ -1,5 +1,6 @@
 const express = require('express');
 const parser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 const userRouter = require('./routes/userRouter');
 const {hostRouter} = require('./routes/hostRouter');
@@ -20,8 +21,20 @@ app.use((req,res,next) => {
 });
 
 app.use(parser.urlencoded());
+app.use(cookieParser());
+app.use((req,res,next) => {
+  req.isLoggedIn =req.cookies.isLoggedIn === "true";//agar cookie aai h then we will check wether it is logged in or not if there is no cookie then there is no nooed to check it is sure it is not logged in
+  console.log(req.isLoggedIn);
+  next();
+})
 app.use(authRouter);
 app.use(userRouter);
+app.use((req,res,next) => {
+  if(!req.isLoggedIn) {
+    return res.redirect("/login");
+  }
+  next();
+})
 app.use(hostRouter);
 
 app.use(errorControl.get404);
