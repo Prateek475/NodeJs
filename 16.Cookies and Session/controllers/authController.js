@@ -8,4 +8,9 @@ exports.postLogin = (req, res, next) => {
   res.redirect("/");
 };
 
+exports.postLogout = (req, res, next) => {
+  res.cookie("isLoggedIn",false);//this cookie will be stored in client storage and set to false making him/her logged out and redirecting them to home page...
+  res.redirect("/");
+};
+
 

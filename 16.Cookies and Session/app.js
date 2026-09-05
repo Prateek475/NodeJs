@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const parser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -21,6 +22,11 @@ app.use((req,res,next) => {
 });
 
 app.use(parser.urlencoded());
+app.use(session({
+  secret : "DR_RIC",
+  resave : false,
+  saveUninitialized : true
+}));
 app.use(cookieParser());
 app.use((req,res,next) => {
   req.isLoggedIn =req.cookies.isLoggedIn === "true";//agar cookie aai h then we will check wether it is logged in or not if there is no cookie then there is no nooed to check it is sure it is not logged in

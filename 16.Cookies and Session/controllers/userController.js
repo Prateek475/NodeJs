@@ -43,7 +43,6 @@ exports.getHomeDetails = (req, res, next) => {
       console.log("Home not found");
       res.redirect("/");
     } else {
-      req.isLoggedIn = req.get("Cookie").split("=")[1];
       console.log("Home details found: ", home);
       res.render("store/home-detail.ejs", { title: "Home", home: home,isLoggedIn: req.isLoggedIn });
     }

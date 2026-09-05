@@ -60,7 +60,9 @@
             </div>
           </div>
           <a href="/homes/<%= home._id %>" class="bg-blue-300 p-2">Details</a>
-          <%- include('../partials/favourite',{home:home}) %>
+          <% if(isLoggedIn) { %>
+           <%- include('../partials/favourite',{home:home}) %>
+          <% } %>
         </li>
       <% }); %>
     </ul>
