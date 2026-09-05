@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const mongoDbStore = require('connect-mongodb-session')(session);
 const parser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const app = express();
 const userRouter = require('./routes/userRouter');
 const {hostRouter} = require('./routes/hostRouter');
@@ -16,6 +16,13 @@ app.set('views','views');
 
 app.use(express.static(path.join(rootDir,'public')));
 
+const DB_PATH = "mongodb+srv://prateekdixit252006_db_user:7217797616prateek@prateek0004.qyapyi9.mongodb.net/airbnb1?appName=prateek0004";
+
+const store = new mongoDbStore({
+  uri : DB_PATH,
+  collection : "sessions"
+});
+
 app.use((req,res,next) => {
   console.log(req.url,req.method);
   next();
@@ -25,11 +32,12 @@ app.use(parser.urlencoded());
 app.use(session({
   secret : "DR_RIC",
   resave : false,
-  saveUninitialized : true
+  saveUninitialized : true,
+  store : store
 }));
-app.use(cookieParser());
 app.use((req,res,next) => {
-  req.isLoggedIn =req.cookies.isLoggedIn === "true";//agar cookie aai h then we will check wether it is logged in or not if there is no cookie then there is no nooed to check it is sure it is not logged in
+  req.isLoggedIn =req.session.isLoggedIn;//in the session it will check wether that client is logged in or not and create its value as attribute in request object which can be now used everywhere
+  console.log(req.session);
   console.log(req.isLoggedIn);
   next();
 })
@@ -46,7 +54,6 @@ app.use(hostRouter);
 app.use(errorControl.get404);
 
 const port = 3000;
-const DB_PATH = "mongodb+srv://prateekdixit252006_db_user:7217797616prateek@prateek0004.qyapyi9.mongodb.net/airbnb1?appName=prateek0004"
 mongoose.connect(DB_PATH).then(() => {
   console.log("Connected to mongoose which connect us to mongodb...");
   app.listen(port,()=> {
